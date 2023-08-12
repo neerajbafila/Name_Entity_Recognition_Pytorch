@@ -1,0 +1,3 @@
+paths:
+  data_store: data
+  logs: Logs

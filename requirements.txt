@@ -1,0 +1,13 @@
+notebook
+#transformers[sentencepiece,vision,optuna,sklearn,onnxruntime]
+transformers
+uvicorn[standard]
+mkdocs-material
+tqdm
+seqeval
+from-root
+fastapi
+accelerate
+datasets
+Pyaml
+-e .
