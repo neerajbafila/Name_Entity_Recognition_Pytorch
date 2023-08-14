@@ -5,7 +5,7 @@ import sys
 from ner.constants import *
 
 class logger:
-    def __init__(self, config_file="config/config.yaml"):
+    def __init__(self, config_file=CONFIG_FILE_NAME):
         self.config = read_config(config_file)
         self.log_location = self.config[PATH_KEY][LOGS_FOLDER_NAME_KEY]
         self.log_file_name = self.config[PATH_KEY][LOGS_FILE_NAME_KEY]

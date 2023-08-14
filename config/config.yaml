@@ -7,3 +7,16 @@ paths:
 data_ingestion_config:
   dataset_name: 'xtreme'
   subset_name: 'PAN-X.en'
+
+data_preprocessing:
+  ner_tags:
+    - O
+    - B-PER
+    - I-PER
+    - B-ORG
+    - I-ORG
+    - B-LOC
+    - I-LOC
+
+base_model_config:
+  base_model_name: xlm-roberta-base

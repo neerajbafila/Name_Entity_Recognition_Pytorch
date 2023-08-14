@@ -1,9 +1,10 @@
 from ner.utils.common import read_config, create_directories
 from ner.constants import *
 from ner.exception_and_logger.logger import logger
-from ner.entity.config_entity import DataIngestionConfig
+from ner.entity.config_entity import DataIngestionConfig, DataPreprocessingConfig
 import os
 from pathlib import Path
+from transformers import AutoTokenizer
 
 class Configuration:
     def __init__(self):
@@ -31,3 +32,28 @@ class Configuration:
             return data_ingestion_config
         except Exception as e:
             self.my_logger.write_exception(e)
+
+    def get_data_prepration_config(self) -> DataPreprocessingConfig:
+        try:
+            model_name = self.config[BASE_MODEL_CONFIG_KEY][BASE_MODEL_NAME_KEY]
+            ner_tags = self.config[DATA_PREPROCESSING_KEY][NER_TAGS_KEY]
+
+            index2tag = {idx:tag for idx, tag in enumerate(ner_tags)}
+            tag2index = {tag:idx for idx, tag in enumerate(ner_tags)}
+            data_store_path = self.config[PATH_KEY][DATA_STORE_KEY]
+            data_store_full_path = Path(os.path.join(self.config[PATH_KEY][ARTIFACTS_KEY], data_store_path))
+            self.my_logger.write_log(f"getting tokenizer for {model_name}")
+            tokenizer = AutoTokenizer.from_pretrained(model_name, cache_dir=data_store_full_path)
+            data_prepration_config = DataPreprocessingConfig(
+                model_name=model_name, index2tag=index2tag, tag2index=tag2index,
+                tokenizer = tokenizer
+            )
+            self.my_logger.write_log(f"get_data_prepration_config done with below configuration\n {data_prepration_config}")
+            
+            return data_prepration_config
+
+        except Exception as e:
+            self.my_logger.write_exception(e)
+
+# ob = Configuration()
+# ob.get_data_prepration_config()
