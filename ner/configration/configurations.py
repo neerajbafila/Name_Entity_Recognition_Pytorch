@@ -1,7 +1,7 @@
 from ner.utils.common import read_config, create_directories
 from ner.constants import *
 from ner.exception_and_logger.logger import logger
-from ner.entity.config_entity import DataIngestionConfig, DataPreprocessingConfig
+from ner.entity.config_entity import DataIngestionConfig, DataPreprocessingConfig, DataValidationConfig
 import os
 from pathlib import Path
 from transformers import AutoTokenizer
@@ -54,6 +54,20 @@ class Configuration:
 
         except Exception as e:
             self.my_logger.write_exception(e)
+    
+    def get_data_validation_config(self) -> DataValidationConfig: 
+        try:    
+            self.my_logger.write_log(f"Getting data validation config")
+            data_split = self.config[DATA_VALIDATION_CONFIG_KEY][DATA_SPLIT_KEY]
+            columns_check = self.config[DATA_VALIDATION_CONFIG_KEY][COLUMNS_CHECKS_KEY]
+            type_check = self.config[DATA_VALIDATION_CONFIG_KEY][TYPE_CHECK_KEY]
+            data_validation_config = DataValidationConfig(dataset=None, data_split=data_split, columns_check=columns_check,
+                                                          type_check=type_check)
+            return data_validation_config
+        except Exception as e:
+            self.my_logger.write_exception(e)
+
 
 # ob = Configuration()
-# ob.get_data_prepration_config()
+# # ob.get_data_prepration_config()
+# ob.get_data_validation_config()

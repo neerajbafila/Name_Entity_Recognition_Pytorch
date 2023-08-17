@@ -17,6 +17,21 @@ data_preprocessing:
     - I-ORG
     - B-LOC
     - I-LOC
+data_validation_config:
+  data_split:
+    - train
+    - test
+    - validation
+  
+  columns_check:
+    - tokens
+    - ner_tags
+    - langs
 
+  type_check:
+    - string # token
+    - int64 # ner_tags
+    - string # langs
+    
 base_model_config:
   base_model_name: xlm-roberta-base

@@ -14,6 +14,10 @@ SUBSET_NAME_KEY = "subset_name"
 DATA_PREPROCESSING_KEY = "data_preprocessing"
 NER_TAGS_KEY = "ner_tags"
 
+DATA_VALIDATION_CONFIG_KEY = "data_validation_config"
+DATA_SPLIT_KEY = "data_split"
+COLUMNS_CHECKS_KEY = "columns_check"
+TYPE_CHECK_KEY = "type_check"
+
 BASE_MODEL_CONFIG_KEY = "base_model_config"
 BASE_MODEL_NAME_KEY = "base_model_name"
-BASE_MODEL_CONFIG_KEY
