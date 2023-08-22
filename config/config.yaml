@@ -3,6 +3,7 @@ paths:
   logs: Logs
   log_file_name: logs
   artifacts: artifacts
+  outputs: outputs
   
 data_ingestion_config:
   dataset_name: 'xtreme'
@@ -35,3 +36,7 @@ data_validation_config:
     
 base_model_config:
   base_model_name: xlm-roberta-base
+  num_classes: 7
+  num_epochs: 2
+  batch_size: 16
+  save_steps: 10000000
