@@ -3,7 +3,7 @@ from ner.exception_and_logger.logger import logger
 from ner.configration.configurations import Configuration
 from ner.components.data_ingestion import DataIngestion
 from ner.constants import *
-from typing import Any
+from typing import List
 import pandas as pd
 import sys
 
@@ -12,7 +12,6 @@ class DataValidation:
         self.my_logger = logger(CONFIG_FILE_NAME)
         self.data_validation_config =  data_validation_config
         self.data = data
-        print(self.data_validation_config)
     
     def check_columns_names(self) -> bool:
         try:
@@ -52,6 +51,21 @@ class DataValidation:
         except Exception as e:
             self.my_logger.write_exception(e)
         
+    def drive_check(self) -> List[List[bool]]:
+        try:
+            self.my_logger.write_log(f"checks initiated")
+            checks = list()
+            checks.append([
+                self.check_columns_names(),
+                self.type_check()
+            ])
+        
+            self.my_logger.write_log(f"checks completed Result \n {checks}")
+            return checks
+        except Exception as e:
+            self.my_logger.write_exception(e)
+            raise Exception(e, sys.exc_info())
+        
         
 
             
@@ -60,5 +74,6 @@ if __name__ == '__main__':
     ings = DataIngestion(ob_c.get_data_ingestion_config())
     ob = DataValidation(ob_c.get_data_validation_config(), ings.get_data())
     # ob.check_columns_names()
-    c = ob.type_check()
+    c = ob.drive_check()
     print(c)
+    print(sum(c[0]))
