@@ -25,7 +25,7 @@ class PredictionPipeline:
             input_ids = tokenizer(data, truncation=truncation, is_split_into_words=is_split_into_words, return_tensors="pt")['input_ids']
             # formatted_data = torch.tensor(input_ids['input_ids']).reshape(-1,1)
             # print(input_ids)
-            print(fine_tuned_model)
+            # print(fine_tuned_model)
             model = XLMRobertaForTokenClassification.from_pretrained(fine_tuned_model)
             # print(model.config)
             outputs = model(input_ids).logits
