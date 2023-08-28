@@ -1,7 +1,7 @@
 from ner.utils.common import read_config, create_directories
 from ner.constants import *
 from ner.exception_and_logger.logger import logger
-from ner.entity.config_entity import DataIngestionConfig, DataPreprocessingConfig, DataValidationConfig, ModelTrainConfig
+from ner.entity.config_entity import DataIngestionConfig, DataPreprocessingConfig, DataValidationConfig, ModelTrainConfig, PredictionPipelineConfig
 import os, sys
 from pathlib import Path
 from transformers import AutoTokenizer, AutoConfig
@@ -79,7 +79,10 @@ class Configuration:
             ner_tags = self.config[DATA_PREPROCESSING_KEY][NER_TAGS_KEY]
             index2tag = {idx: tag for idx, tag in enumerate(ner_tags)}
             tag2index = {tag: idx for idx, tag in enumerate(ner_tags)}
-            tokenizer = AutoTokenizer.from_pretrained(model_name)
+            
+            data_store_path = self.config[PATH_KEY][DATA_STORE_KEY]
+            data_store_full_path = Path(os.path.join(self.config[PATH_KEY][ARTIFACTS_KEY], data_store_path))
+            tokenizer = AutoTokenizer.from_pretrained(model_name, cache_dir=data_store_full_path)
             output_root_dir = self.config[PATH_KEY][ARTIFACTS_KEY]
             output_dir = os.path.join(output_root_dir, self.config[PATH_KEY][OUTPUT_DIR_NAME_KEY])
             xlmr_config = AutoConfig.from_pretrained(model_name, num_labels=num_class, id2label=index2tag,
@@ -93,6 +96,33 @@ class Configuration:
         except Exception as e:
             self.my_logger.write_exception(e)
             raise Exception(e, sys)
+    
+    def get_prediction_config(self) -> PredictionPipelineConfig:
+        try:
+            self.my_logger.write_log(f"getting prediction config....")
+            output_root_dir = self.config[PATH_KEY][ARTIFACTS_KEY]
+            output_dir = os.path.join(output_root_dir, self.config[PATH_KEY][OUTPUT_DIR_NAME_KEY])
+            model_name = self.config[BASE_MODEL_CONFIG_KEY][BASE_MODEL_NAME_KEY]
+            fine_tuned_model = os.path.join(output_dir, self.config[PATH_KEY][FINE_TUNED_MODEL_PATH_KEY])
+
+            data_store_path = self.config[PATH_KEY][DATA_STORE_KEY]
+            data_store_full_path = Path(os.path.join(self.config[PATH_KEY][ARTIFACTS_KEY], data_store_path))
+            tokenizer = AutoTokenizer.from_pretrained(model_name, cache_dir=data_store_full_path)
+
+            truncation = self.config[PREDICTION_PIPELINE_CONFIG_KEY][TRUNCATION_KEY]
+            is_split_into_words = self.config[PREDICTION_PIPELINE_CONFIG_KEY][IS_SPLIT_INTO_WORDS_KEY]
+            ner_tags = self.config[DATA_PREPROCESSING_KEY][NER_TAGS_KEY]
+            index2tag = {idx:tag for idx, tag in enumerate(ner_tags)}
+            tag2index = {tag:idx for idx, tag in enumerate(ner_tags)}
+            prediction_pipeline_config = PredictionPipelineConfig(tokenizer=tokenizer, truncation=truncation,
+                                                                  is_split_into_words=is_split_into_words, output_dir=output_dir,
+                                                                  index2tag=index2tag,
+                                                                  tag2index=tag2index, fine_tuned_model=fine_tuned_model)
+            return prediction_pipeline_config
+            
+        except Exception as e:
+            self.my_logger.write_exception(e)
+            raise Exception(e, sys.exc_info())
 
 
 
@@ -101,3 +131,5 @@ class Configuration:
 # # ob.get_data_prepration_config()
 # ob.get_data_validation_config()
 # ob.get_model_training_config()
+# p = ob.get_prediction_config()
+# print(p)

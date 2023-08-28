@@ -7,3 +7,5 @@ ModelTrainConfig = namedtuple("ModelTrainConfig", ["model_name", "num_classes",
                                                    "num_epochs", "batch_size", "save_steps",
                                                    "index2tag", "tag2index",
                                                    "tokenizer", "xlmr_config", "output_dir"])
+PredictionPipelineConfig = namedtuple("PredictionPipelineConfig", ["tokenizer", "truncation", "is_split_into_words",
+                                                                   "output_dir", "index2tag", "tag2index", "fine_tuned_model"])

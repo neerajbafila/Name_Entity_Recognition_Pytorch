@@ -4,6 +4,7 @@ paths:
   log_file_name: logs
   artifacts: artifacts
   outputs: outputs
+  fine_tuned_model: fine_tuned_model
   
 data_ingestion_config:
   dataset_name: 'xtreme'
@@ -40,3 +41,7 @@ base_model_config:
   num_epochs: 2
   batch_size: 16
   save_steps: 10000000
+
+predict_model_config:
+  truncation: True
+  is_split_into_words: True
